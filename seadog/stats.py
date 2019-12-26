@@ -3,7 +3,7 @@ from tabulate import tabulate
 class Stats:
     def get_description(dataframe):
         description = dataframe.describe()
-        table = Statslysis._make_table(description)
+        table = Stats._make_table(description)
         return table
 
     def get_sample(dataframe, n):

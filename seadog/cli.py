@@ -3,6 +3,7 @@ import pandas as pd
 import termplotlib
 
 from .na import Na
+from .graphs.graph_manager import GraphManager
 from .stats import Stats
 
 @click.group()
@@ -62,8 +63,59 @@ def na(ctx, total, remove_cols, remove_rows, output):
         click.echo(na_stats)
         return
 
+    _output(output, output_df)
+
+@cli.command()
+# Graph type feature switch
+# @click.option('--barchart', 'graph_type', flag_value='barchart',
+#               help = 'Draws a barchart')
+# @click.option('--distplot', 'graph_type', flag_value='distplot',
+#               help = 'Draws a distribution plot')
+@click.option('--histogram', 'graph_type', flag_value='histogram',
+              help = 'Draws a histogram')
+# @click.option('--scatterplot', 'graph_type', flag_value='scatterplot',
+#               help = 'Draws a scatter plot')
+# @click.option('--heatmap', 'graph_type', flag_value='heatmap',
+#               help = 'Draws a heatmap')
+# Data definition
+@click.option('--x-axis', '-x', type = click.STRING,
+              help = 'Defines the column to plot on the X axis')
+@click.option('--y-axis', '-y', type = click.STRING,
+              help = 'Defines the column to plot on the Y axis')
+@click.option('--output', '-o', is_flag = False,
+    type=click.File('wb'),
+    help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
+@click.option('--logx/--no-logx', help = 'X-axis transformation to logarithmic scale')
+@click.option('--logy/--no-logy', help = 'Y-axis transformation to logarithmic scale')
+# Graph CLI
+@click.pass_context
+def graph(ctx, graph_type, x_axis, y_axis, logx, logy, output):
+    dataframe = ctx.obj['CSV']
+
+    args = { 'graph_type': graph_type,
+              'x_axis': x_axis,
+              'y_axis': y_axis,
+              'logx': logx,
+              'logy': logy }
+    print(args) # TODO: Remove this
+
+    err = GraphManager.validate_args(dataframe, args)
+    if err != None:
+        ctx.fail(err)
+
+    graph = GraphManager.switch(graph_type)
+    err = graph.validate(dataframe, args)
+    if err != None:
+        ctx.fail(err)
+
+    # TODO: Handle graph output
+    click.echo(graph.output(dataframe, args))
+    # _output(output, output_df)
+
+def _output(output, dataframe):
     # TODO: handle this in chunks?
-    output_csv = output_df.to_csv()
+    # TODO: handle image viewer opening if output is None
+    output_csv = dataframe.to_csv()
     output.write(output_csv.encode('utf-8'))
     output.flush()
 
