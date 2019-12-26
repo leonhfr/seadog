@@ -1,4 +1,4 @@
-# seadog
+# Seadog
 
 Seadog helps you generate statistical data visualizations directly from the command line. 
 
@@ -6,14 +6,14 @@ It aims to allow quick analyses of data, and while it is essentially a wrapper f
 
 The word seadog may be slang for either a veteran sailor or seals. 
 
-Supports Python 3.7+.
+Seadog supports Python 3.7+.
 
 ## Installation
 
-Using `pip` to install `seadog`:
+Seadog is [published on PyPI](https://pypi.org/project/seadog/), use `pip` to install it:
 
 ```bash
-pip install --user
+pip install --user seadog
 ```
 
 ## Quick start
@@ -22,11 +22,6 @@ This section will be updated once `seadog` provides some functionality. Features
 
 ## Todo
 
-- Data description
-- Data sample (n)
-- Data correlation
-- Data NaN detection (graph in terminal)
-- Data NaN removal
 - Bar chart (and horizontal option)
 - Histogram
 - Dist plot with KDE
