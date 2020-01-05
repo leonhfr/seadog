@@ -25,7 +25,6 @@ This section will be updated once `seadog` provides some functionality. Features
 - Limit axis range
 - Labels auto rotate
 - Unsort option for bar charts
-- Scatter plots
 - Heatmaps
 - Correlation heatmaps
 - Graph sizes

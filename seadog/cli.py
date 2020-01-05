@@ -4,6 +4,7 @@ import pandas as pd
 from .graphs.barchart import Barchart
 from .graphs.distplot import Distplot
 from .graphs.histogram import Histogram
+from .graphs.scatterplot import Scatterplot
 from .na import Na
 from .output import Output
 from .stats import Stats
@@ -80,6 +81,11 @@ def na(ctx, total, remove_cols, remove_rows, output):
 def barchart(ctx, x_axis, log, output):
     """Draws a bar chart. Used to plot the distribution of a categorical variable."""
     dataframe = ctx.obj['CSV']
+
+    err = Barchart.validate(dataframe, x_axis)
+    if err is not None:
+        ctx.fail(err)
+
     image = Barchart.make(dataframe, x_axis, log)
     Output.png(output, image)
 
@@ -97,6 +103,11 @@ def barchart(ctx, x_axis, log, output):
 def distplot(ctx, x_axis, bucket, output):
     """Draws a distribution plot. Used to plot the distribution of a numerical variable."""
     dataframe = ctx.obj['CSV']
+    
+    err = Distplot.validate(dataframe, x_axis)
+    if err is not None:
+        ctx.fail(err)
+
     image = Distplot.make(dataframe, x_axis, bucket)
     Output.png(output, image)
 
@@ -116,7 +127,37 @@ def distplot(ctx, x_axis, bucket, output):
 def histogram(ctx, x_axis, bucket, log, discrete, output):
     """Draws a histogram. Used to plot the distribution of a numeric variable."""
     dataframe = ctx.obj['CSV']
+    
+    err = Histogram.validate(dataframe, x_axis)
+    if err is not None:
+        ctx.fail(err)
+
     image = Histogram.make(dataframe, x_axis, bucket, log, discrete)
+    Output.png(output, image)
+
+@cli.command()
+@click.option('--x-axis', '-x', type = click.STRING, required = True,
+              help = 'Defines the column to plot on the X axis')
+@click.option('--y-axis', '-y', type = click.STRING, required = True,
+              help = 'Defines the column to plot on the X axis')
+@click.option('--xlog/--no-xlog', help = 'X-axis transformation to logarithmic scale')
+@click.option('--ylog/--no-ylog', help = 'Y-axis transformation to logarithmic scale')
+@click.option('--regline/--no-regline', help = 'Display the regression line')
+@click.option('--output', '-o', is_flag = False,
+    type=click.File('wb'),
+    help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
+# TODO: size option
+# TODO: rotate option
+@click.pass_context
+def scatterplot(ctx, x_axis, y_axis, xlog, ylog, regline, output):
+    """Draws a scatter plot. Quantitative variable vs quantitative variable."""
+    dataframe = ctx.obj['CSV']
+    
+    err = Scatterplot.validate(dataframe, x_axis)
+    if err is not None:
+        ctx.fail(err)
+
+    image = Scatterplot.make(dataframe, x_axis, y_axis, xlog, ylog, regline)
     Output.png(output, image)
 
 if __name__ == '__main__':

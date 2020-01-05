@@ -5,11 +5,14 @@ import numpy as np
 from .helper import Helper
 
 class Histogram:
-    def make(dataframe, x_axis, bucket, log, discrete):
+    def validate(dataframe, x_axis):
         if x_axis not in dataframe.columns:
             err = "Column {} does not exist in dataset.".format(x_axis)
-            ctx.fail(err)
-        
+            return err
+
+        return None
+
+    def make(dataframe, x_axis, bucket, log, discrete):
         y_label = 'count'
         x_label = x_axis
         series = dataframe[x_axis]

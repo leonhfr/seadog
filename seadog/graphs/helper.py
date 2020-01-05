@@ -30,3 +30,9 @@ class Helper:
             index = index + 1
 
         return ticks
+
+    def log_trans(x, inverse = False):
+        if not inverse:
+            return np.log10(x)
+        else:
+            return np.power(10, x)
