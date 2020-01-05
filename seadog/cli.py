@@ -153,7 +153,7 @@ def scatterplot(ctx, x_axis, y_axis, xlog, ylog, regline, output):
     """Draws a scatter plot. Quantitative variable vs quantitative variable."""
     dataframe = ctx.obj['CSV']
     
-    err = Scatterplot.validate(dataframe, x_axis)
+    err = Scatterplot.validate(dataframe, x_axis, y_axis)
     if err is not None:
         ctx.fail(err)
 

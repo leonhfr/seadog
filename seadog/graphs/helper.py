@@ -31,7 +31,10 @@ class Helper:
 
         return ticks
 
-    def log_trans(x, inverse = False):
+    def log_trans(x, apply = True, inverse = False):
+        if not apply:
+            return x
+            
         if not inverse:
             return np.log10(x)
         else:

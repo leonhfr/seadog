@@ -19,4 +19,30 @@ class Scatterplot:
         return None
 
     def make(dataframe, x_axis, y_axis, xlog, ylog, regline):
-        print("hello")
+        x_label = x_axis
+        y_label = y_axis
+        x_data = dataframe[x_axis].apply(Helper.log_trans, apply = xlog)
+        y_data = dataframe[y_axis].apply(Helper.log_trans, apply = ylog)
+
+        sb.regplot(x_data, y_data, fit_reg = regline)
+
+        if xlog:
+            x_label = 'log(' + x_label + ')'
+            max = dataframe[x_axis].max()
+            ticks = Helper.get_log_ticks(max)
+            plt.xticks(Helper.log_trans(ticks), ticks)
+
+        if ylog:
+            y_label = 'log(' + y_label + ')'
+            max = dataframe[y_axis].max()
+            ticks = Helper.get_log_ticks(max)
+            plt.yticks(Helper.log_trans(ticks), ticks)
+
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
+        plt.tight_layout()
+
+        f = BytesIO()
+        plt.savefig(f, format = 'png')
+        
+        return f.getvalue()
