@@ -2,6 +2,7 @@ import click
 import pandas as pd
 
 from .graphs.barchart import Barchart
+from .graphs.box import Box
 from .graphs.distplot import Distplot
 from .graphs.histogram import Histogram
 from .graphs.pie import Pie
@@ -87,6 +88,26 @@ def barchart(ctx, column, log, output):
         ctx.fail(err)
 
     image = Barchart.make(dataframe, column, log)
+    Output.png(output, image)
+
+@cli.command()
+@click.option('--x-axis', '-x', type = click.STRING, required = True,
+              help = 'Defines the column to plot on the X axis')
+@click.option('--y-axis', '-y', type = click.STRING, required = True,
+              help = 'Defines the column to plot on the X axis')
+@click.option('--output', '-o', is_flag = False,
+    type=click.File('wb'),
+    help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
+@click.pass_context
+def box(ctx, x_axis, y_axis, output):
+    """Draws a box plot. Quantitative variable vs qualitative variable."""
+    dataframe = ctx.obj['CSV']
+    
+    err = Box.validate(dataframe, x_axis, y_axis)
+    if err is not None:
+        ctx.fail(err)
+
+    image = Box.make(dataframe, x_axis, y_axis)
     Output.png(output, image)
 
 @cli.command()
@@ -177,8 +198,6 @@ def scatterplot(ctx, x_axis, y_axis, xlog, ylog, regline, output):
               help = 'Defines the column to plot on the X axis')
 @click.option('--y-axis', '-y', type = click.STRING, required = True,
               help = 'Defines the column to plot on the X axis')
-# @click.option('--xlog/--no-xlog', help = 'X-axis transformation to logarithmic scale')
-# @click.option('--ylog/--no-ylog', help = 'Y-axis transformation to logarithmic scale')
 @click.option('--output', '-o', is_flag = False,
     type=click.File('wb'),
     help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
