@@ -30,5 +30,5 @@ This section will be updated once `seadog` provides some functionality. Features
 - Graph sizes
 - Graph rotation
 - Line plots with error option
-- Pie charts
+- Improve pie charts
 

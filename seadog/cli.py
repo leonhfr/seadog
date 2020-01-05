@@ -4,6 +4,7 @@ import pandas as pd
 from .graphs.barchart import Barchart
 from .graphs.distplot import Distplot
 from .graphs.histogram import Histogram
+from .graphs.pie import Pie
 from .graphs.scatterplot import Scatterplot
 from .na import Na
 from .output import Output
@@ -133,6 +134,24 @@ def histogram(ctx, x_axis, bucket, log, discrete, output):
         ctx.fail(err)
 
     image = Histogram.make(dataframe, x_axis, bucket, log, discrete)
+    Output.png(output, image)
+
+@cli.command()
+@click.option('--variable', '-v', type = click.STRING, required = True,
+              help = 'Defines the column to plot')
+@click.option('--output', '-o', is_flag = False,
+    type=click.File('wb'),
+    help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
+@click.pass_context
+def pie(ctx, variable, output):
+    """Draws a pie chart. Used to plot the relative frequency of a categorical variable."""
+    dataframe = ctx.obj['CSV']
+
+    err = Pie.validate(dataframe, variable)
+    if err is not None:
+        ctx.fail(err)
+
+    image = Pie.make(dataframe, variable)
     Output.png(output, image)
 
 @cli.command()
