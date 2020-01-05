@@ -4,15 +4,15 @@ import matplotlib.pyplot as plt
 from .helper import Helper
 
 class Pie:
-    def validate(dataframe, variable):
-        if variable not in dataframe.columns:
-            err = "Variable {} does not exist in dataset.".format(variable)
+    def validate(dataframe, column):
+        if column not in dataframe.columns:
+            err = "Column '{}' does not exist in dataset.".format(column)
             return err
 
         return None
 
-    def make(dataframe, variable):
-        sorted_counts = dataframe[variable].value_counts()
+    def make(dataframe, column):
+        sorted_counts = dataframe[column].value_counts()
 
         plt.pie(sorted_counts, labels = sorted_counts.index,
                 startangle = 90, counterclock = False)

@@ -5,17 +5,17 @@ import numpy as np
 from .helper import Helper
 
 class Histogram:
-    def validate(dataframe, x_axis):
-        if x_axis not in dataframe.columns:
-            err = "Column {} does not exist in dataset.".format(x_axis)
+    def validate(dataframe, column):
+        if column not in dataframe.columns:
+            err = "Column '{}' does not exist in dataset.".format(column)
             return err
 
         return None
 
-    def make(dataframe, x_axis, bucket, log, discrete):
+    def make(dataframe, column, bucket, log, discrete):
+        x_label = column
         y_label = 'count'
-        x_label = x_axis
-        series = dataframe[x_axis]
+        series = dataframe[column]
         
         if bucket == None:
             bucket = Helper.get_bucket_size(series)
@@ -25,7 +25,7 @@ class Histogram:
         if discrete:
             width = 0.7
 
-        plt.hist(data = dataframe, x = x_axis, bins = bin_edges, rwidth = width)
+        plt.hist(data = dataframe, x = column, bins = bin_edges, rwidth = width)
 
         # xticks = Histogram._get_x_ticks(series, bucket)
         # plt.xticks(xticks, xticks)

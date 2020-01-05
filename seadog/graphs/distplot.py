@@ -6,15 +6,15 @@ import seaborn as sb
 from .helper import Helper
 
 class Distplot:
-    def validate (dataframe, x_axis):
-        if x_axis not in dataframe.columns:
-            err = "Column {} does not exist in dataset.".format(x_axis)
+    def validate (dataframe, column):
+        if column not in dataframe.columns:
+            err = "Column '{}' does not exist in dataset.".format(column)
             return err
 
         return None
 
-    def make(dataframe, x_axis, bucket):
-        series = dataframe[x_axis]
+    def make(dataframe, column, bucket):
+        series = dataframe[column]
         
         if bucket == None:
             bucket = Helper.get_bucket_size(series)

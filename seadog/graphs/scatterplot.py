@@ -8,12 +8,12 @@ from .helper import Helper
 class Scatterplot:
     def validate(dataframe, x_axis, y_axis):
         if x_axis not in dataframe.columns:
-            err = "Column {} does not exist in dataset.".format(x_axis)
+            err = "Column '{}' does not exist in dataset.".format(x_axis)
             return err
 
         
         if y_axis not in dataframe.columns:
-            err = "Column {} does not exist in dataset.".format(y_axis)
+            err = "Column '{}' does not exist in dataset.".format(y_axis)
             return err
 
         return None
