@@ -22,15 +22,16 @@ This section will be updated once `seadog` provides some functionality. Features
 
 ## Todo
 
-- Bar chart
-- Histogram
 - Dist plot with KDE
-- Logarithmic scales for x and y
-- Axes labels
+- Axes labels (with log of variable)
+- Limit axis range
+- Labels auto rotate
+- Unsort option for bar charts
 - Scatter plots
-- Correlation heatmap
 - Heatmaps
+- Correlation heatmaps
+- Graph sizes
+- Graph rotation
 - Line plots with error option
-- Horizontal options?
-- Pie charts?
+- Pie charts
 

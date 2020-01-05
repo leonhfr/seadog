@@ -1,9 +1,10 @@
 import click
 import pandas as pd
-import termplotlib
 
+from .graphs.barchart import Barchart
+from .graphs.histogram import Histogram
 from .na import Na
-from .graphs.graph_manager import GraphManager
+from .output import Output
 from .stats import Stats
 
 @click.group()
@@ -63,61 +64,42 @@ def na(ctx, total, remove_cols, remove_rows, output):
         click.echo(na_stats)
         return
 
-    _output(output, output_df)
+    Output.csv(output, output_df)
 
 @cli.command()
-# Graph type feature switch
-# @click.option('--barchart', 'graph_type', flag_value='barchart',
-#               help = 'Draws a barchart')
-# @click.option('--distplot', 'graph_type', flag_value='distplot',
-#               help = 'Draws a distribution plot')
-@click.option('--histogram', 'graph_type', flag_value='histogram',
-              help = 'Draws a histogram')
-# @click.option('--scatterplot', 'graph_type', flag_value='scatterplot',
-#               help = 'Draws a scatter plot')
-# @click.option('--heatmap', 'graph_type', flag_value='heatmap',
-#               help = 'Draws a heatmap')
-# Data definition
-@click.option('--x-axis', '-x', type = click.STRING,
+@click.option('--x-axis', '-x', type = click.STRING, required = True,
               help = 'Defines the column to plot on the X axis')
-@click.option('--y-axis', '-y', type = click.STRING,
-              help = 'Defines the column to plot on the Y axis')
+@click.option('--log', '-l', is_flag = True, help = 'Axis transformation to logarithmic scale')
 @click.option('--output', '-o', is_flag = False,
     type=click.File('wb'),
     help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
-@click.option('--logx/--no-logx', help = 'X-axis transformation to logarithmic scale')
-@click.option('--logy/--no-logy', help = 'Y-axis transformation to logarithmic scale')
-# Graph CLI
+# TODO: size option
+# TODO: rotate option
 @click.pass_context
-def graph(ctx, graph_type, x_axis, y_axis, logx, logy, output):
+def barchart(ctx, x_axis, log, output):
+    """Draws a bar chart. Used to plot the distribution of a categorical variable."""
     dataframe = ctx.obj['CSV']
+    image = Barchart.make(dataframe, x_axis, log)
+    Output.png(output, image)
 
-    args = { 'graph_type': graph_type,
-              'x_axis': x_axis,
-              'y_axis': y_axis,
-              'logx': logx,
-              'logy': logy }
-    print(args) # TODO: Remove this
-
-    err = GraphManager.validate_args(dataframe, args)
-    if err != None:
-        ctx.fail(err)
-
-    graph = GraphManager.switch(graph_type)
-    err = graph.validate(dataframe, args)
-    if err != None:
-        ctx.fail(err)
-
-    # TODO: Handle graph output
-    click.echo(graph.output(dataframe, args))
-    # _output(output, output_df)
-
-def _output(output, dataframe):
-    # TODO: handle this in chunks?
-    # TODO: handle image viewer opening if output is None
-    output_csv = dataframe.to_csv()
-    output.write(output_csv.encode('utf-8'))
-    output.flush()
+@cli.command()
+@click.option('--x-axis', '-x', type = click.STRING, required = True,
+              help = 'Defines the column to plot on the X axis')
+@click.option('--bucket', '-b', type = click.FLOAT,
+              help = 'Overrides the computed bucket size.')
+@click.option('--log', '-l', is_flag = True, help = 'Axis transformation to logarithmic scale')
+@click.option('--discrete', '-d', is_flag = True, help = "Makes the plot discrete.")
+@click.option('--output', '-o', is_flag = False,
+    type=click.File('wb'),
+    help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
+# TODO: size option
+# TODO: rotate option
+@click.pass_context
+def histogram(ctx, x_axis, bucket, log, discrete, output):
+    """Draws a histogram. Used to plot the distribution of a numeric variable (quantitative version of the bar chart)."""
+    dataframe = ctx.obj['CSV']
+    image = Histogram.make(dataframe, x_axis, bucket, log, discrete)
+    Output.png(output, image)
 
 if __name__ == '__main__':
     cli(obj = {})
