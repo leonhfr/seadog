@@ -6,6 +6,7 @@ from .graphs.distplot import Distplot
 from .graphs.histogram import Histogram
 from .graphs.pie import Pie
 from .graphs.scatterplot import Scatterplot
+from .graphs.violin import Violin
 from .na import Na
 from .output import Output
 from .stats import Stats
@@ -169,6 +170,28 @@ def scatterplot(ctx, x_axis, y_axis, xlog, ylog, regline, output):
         ctx.fail(err)
 
     image = Scatterplot.make(dataframe, x_axis, y_axis, xlog, ylog, regline)
+    Output.png(output, image)
+
+@cli.command()
+@click.option('--x-axis', '-x', type = click.STRING, required = True,
+              help = 'Defines the column to plot on the X axis')
+@click.option('--y-axis', '-y', type = click.STRING, required = True,
+              help = 'Defines the column to plot on the X axis')
+# @click.option('--xlog/--no-xlog', help = 'X-axis transformation to logarithmic scale')
+# @click.option('--ylog/--no-ylog', help = 'Y-axis transformation to logarithmic scale')
+@click.option('--output', '-o', is_flag = False,
+    type=click.File('wb'),
+    help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
+@click.pass_context
+def violin(ctx, x_axis, y_axis, output):
+    """Draws a violin plot. Quantitative variable vs qualitative variable."""
+    dataframe = ctx.obj['CSV']
+    
+    err = Violin.validate(dataframe, x_axis, y_axis)
+    if err is not None:
+        ctx.fail(err)
+
+    image = Violin.make(dataframe, x_axis, y_axis)
     Output.png(output, image)
 
 if __name__ == '__main__':
