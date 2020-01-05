@@ -22,6 +22,7 @@ class Distplot:
         # xticks = Distplot._get_x_ticks(series, bucket)
         # plt.xticks(xticks, xticks)
 
+        plt.ylabel("KDE")
         plt.tight_layout()
 
         f = BytesIO()

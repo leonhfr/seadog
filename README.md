@@ -22,7 +22,6 @@ This section will be updated once `seadog` provides some functionality. Features
 
 ## Todo
 
-- Axes labels (with log of variable)
 - Limit axis range
 - Labels auto rotate
 - Unsort option for bar charts
