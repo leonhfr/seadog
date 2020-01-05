@@ -22,7 +22,6 @@ This section will be updated once `seadog` provides some functionality. Features
 
 ## Todo
 
-- Dist plot with KDE
 - Axes labels (with log of variable)
 - Limit axis range
 - Labels auto rotate

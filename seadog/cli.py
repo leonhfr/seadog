@@ -2,6 +2,7 @@ import click
 import pandas as pd
 
 from .graphs.barchart import Barchart
+from .graphs.distplot import Distplot
 from .graphs.histogram import Histogram
 from .na import Na
 from .output import Output
@@ -87,6 +88,23 @@ def barchart(ctx, x_axis, log, output):
               help = 'Defines the column to plot on the X axis')
 @click.option('--bucket', '-b', type = click.FLOAT,
               help = 'Overrides the computed bucket size.')
+@click.option('--output', '-o', is_flag = False,
+    type=click.File('wb'),
+    help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
+# TODO: size option
+# TODO: rotate option
+@click.pass_context
+def distplot(ctx, x_axis, bucket, output):
+    """Draws a distribution plot. Used to plot the distribution of a numerical variable."""
+    dataframe = ctx.obj['CSV']
+    image = Distplot.make(dataframe, x_axis, bucket)
+    Output.png(output, image)
+
+@cli.command()
+@click.option('--x-axis', '-x', type = click.STRING, required = True,
+              help = 'Defines the column to plot on the X axis')
+@click.option('--bucket', '-b', type = click.FLOAT,
+              help = 'Overrides the computed bucket size.')
 @click.option('--log', '-l', is_flag = True, help = 'Axis transformation to logarithmic scale')
 @click.option('--discrete', '-d', is_flag = True, help = "Makes the plot discrete.")
 @click.option('--output', '-o', is_flag = False,
@@ -96,7 +114,7 @@ def barchart(ctx, x_axis, log, output):
 # TODO: rotate option
 @click.pass_context
 def histogram(ctx, x_axis, bucket, log, discrete, output):
-    """Draws a histogram. Used to plot the distribution of a numeric variable (quantitative version of the bar chart)."""
+    """Draws a histogram. Used to plot the distribution of a numeric variable."""
     dataframe = ctx.obj['CSV']
     image = Histogram.make(dataframe, x_axis, bucket, log, discrete)
     Output.png(output, image)
