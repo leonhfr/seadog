@@ -12,7 +12,10 @@ class Barchart:
 
         return None
 
-    def make(dataframe, column, log):
+    def make(dataframe, column, log, size):
+        figsize = Helper.get_figsize(size)
+        plt.figure(figsize = figsize)
+
         x_label = column
         y_label = 'count'
         base_color = sb.color_palette()[0]

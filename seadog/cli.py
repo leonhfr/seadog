@@ -75,11 +75,13 @@ def na(ctx, total, remove_cols, remove_rows, output):
 @click.option('--column', '-c', type = click.STRING, required = True,
               help = 'Defines the column to plot')
 @click.option('--log', '-l', is_flag = True, help = 'Axis transformation to logarithmic scale')
+@click.option('--size', '-s', type = click.INT, nargs = 2,
+              help = 'Size of the graph in pixels: x y')
 @click.option('--output', '-o', is_flag = False,
     type=click.File('wb'),
     help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
 @click.pass_context
-def barchart(ctx, column, log, output):
+def barchart(ctx, column, log, size, output):
     """Draws a bar chart. Used to plot the distribution of a categorical variable."""
     dataframe = ctx.obj['CSV']
 
@@ -87,7 +89,7 @@ def barchart(ctx, column, log, output):
     if err is not None:
         ctx.fail(err)
 
-    image = Barchart.make(dataframe, column, log)
+    image = Barchart.make(dataframe, column, log, size)
     Output.png(output, image)
 
 @cli.command()
@@ -95,11 +97,13 @@ def barchart(ctx, column, log, output):
               help = 'Defines the column to plot on the X axis')
 @click.option('--y-axis', '-y', type = click.STRING, required = True,
               help = 'Defines the column to plot on the X axis')
+@click.option('--size', '-s', type = click.INT, nargs = 2,
+              help = 'Size of the graph in pixels: x y')
 @click.option('--output', '-o', is_flag = False,
     type=click.File('wb'),
     help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
 @click.pass_context
-def box(ctx, x_axis, y_axis, output):
+def box(ctx, x_axis, y_axis, size, output):
     """Draws a box plot. Quantitative variable vs qualitative variable."""
     dataframe = ctx.obj['CSV']
     
@@ -107,7 +111,7 @@ def box(ctx, x_axis, y_axis, output):
     if err is not None:
         ctx.fail(err)
 
-    image = Box.make(dataframe, x_axis, y_axis)
+    image = Box.make(dataframe, x_axis, y_axis, size)
     Output.png(output, image)
 
 @cli.command()
@@ -115,11 +119,13 @@ def box(ctx, x_axis, y_axis, output):
               help = 'Defines the column to plot')
 @click.option('--bucket', '-b', type = click.FLOAT,
               help = 'Overrides the computed bucket size.')
+@click.option('--size', '-s', type = click.INT, nargs = 2,
+              help = 'Size of the graph in pixels: x y')
 @click.option('--output', '-o', is_flag = False,
     type=click.File('wb'),
     help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
 @click.pass_context
-def distplot(ctx, column, bucket, output):
+def distplot(ctx, column, bucket, size, output):
     """Draws a distribution plot. Used to plot the distribution of a numerical variable."""
     dataframe = ctx.obj['CSV']
     
@@ -127,7 +133,7 @@ def distplot(ctx, column, bucket, output):
     if err is not None:
         ctx.fail(err)
 
-    image = Distplot.make(dataframe, column, bucket)
+    image = Distplot.make(dataframe, column, bucket, size)
     Output.png(output, image)
 
 @cli.command()
@@ -137,11 +143,13 @@ def distplot(ctx, column, bucket, output):
               help = 'Overrides the computed bucket size.')
 @click.option('--log', '-l', is_flag = True, help = 'Axis transformation to logarithmic scale')
 @click.option('--discrete', '-d', is_flag = True, help = "Makes the plot discrete.")
+@click.option('--size', '-s', type = click.INT, nargs = 2,
+              help = 'Size of the graph in pixels: x y')
 @click.option('--output', '-o', is_flag = False,
     type=click.File('wb'),
     help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
 @click.pass_context
-def histogram(ctx, column, bucket, log, discrete, output):
+def histogram(ctx, column, bucket, log, discrete, size, output):
     """Draws a histogram. Used to plot the distribution of a numeric variable."""
     dataframe = ctx.obj['CSV']
     
@@ -149,17 +157,19 @@ def histogram(ctx, column, bucket, log, discrete, output):
     if err is not None:
         ctx.fail(err)
 
-    image = Histogram.make(dataframe, column, bucket, log, discrete)
+    image = Histogram.make(dataframe, column, bucket, log, discrete, size)
     Output.png(output, image)
 
 @cli.command()
 @click.option('--column', '-c', type = click.STRING, required = True,
               help = 'Defines the column to plot')
+@click.option('--size', '-s', type = click.INT, nargs = 2,
+              help = 'Size of the graph in pixels: x y')
 @click.option('--output', '-o', is_flag = False,
     type=click.File('wb'),
     help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
 @click.pass_context
-def pie(ctx, column, output):
+def pie(ctx, column, size, output):
     """Draws a pie chart. Used to plot the relative frequency of a categorical variable."""
     dataframe = ctx.obj['CSV']
 
@@ -167,7 +177,7 @@ def pie(ctx, column, output):
     if err is not None:
         ctx.fail(err)
 
-    image = Pie.make(dataframe, column)
+    image = Pie.make(dataframe, column, size)
     Output.png(output, image)
 
 @cli.command()
@@ -178,11 +188,13 @@ def pie(ctx, column, output):
 @click.option('--xlog/--no-xlog', help = 'X-axis transformation to logarithmic scale')
 @click.option('--ylog/--no-ylog', help = 'Y-axis transformation to logarithmic scale')
 @click.option('--regline/--no-regline', help = 'Display the regression line')
+@click.option('--size', '-s', type = click.INT, nargs = 2,
+              help = 'Size of the graph in pixels: x y')
 @click.option('--output', '-o', is_flag = False,
     type=click.File('wb'),
     help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
 @click.pass_context
-def scatterplot(ctx, x_axis, y_axis, xlog, ylog, regline, output):
+def scatterplot(ctx, x_axis, y_axis, xlog, ylog, regline, size, output):
     """Draws a scatter plot. Quantitative variable vs quantitative variable."""
     dataframe = ctx.obj['CSV']
     
@@ -190,7 +202,7 @@ def scatterplot(ctx, x_axis, y_axis, xlog, ylog, regline, output):
     if err is not None:
         ctx.fail(err)
 
-    image = Scatterplot.make(dataframe, x_axis, y_axis, xlog, ylog, regline)
+    image = Scatterplot.make(dataframe, x_axis, y_axis, xlog, ylog, regline, size)
     Output.png(output, image)
 
 @cli.command()
@@ -198,11 +210,13 @@ def scatterplot(ctx, x_axis, y_axis, xlog, ylog, regline, output):
               help = 'Defines the column to plot on the X axis')
 @click.option('--y-axis', '-y', type = click.STRING, required = True,
               help = 'Defines the column to plot on the X axis')
+@click.option('--size', '-s', type = click.INT, nargs = 2,
+              help = 'Size of the graph in pixels: x y')
 @click.option('--output', '-o', is_flag = False,
     type=click.File('wb'),
     help = 'Defines output file; use - for stdout. If not set, Seadog will attempt to open the graph with the default image viewer.')
 @click.pass_context
-def violin(ctx, x_axis, y_axis, output):
+def violin(ctx, x_axis, y_axis, size, output):
     """Draws a violin plot. Quantitative variable vs qualitative variable."""
     dataframe = ctx.obj['CSV']
     
@@ -210,7 +224,7 @@ def violin(ctx, x_axis, y_axis, output):
     if err is not None:
         ctx.fail(err)
 
-    image = Violin.make(dataframe, x_axis, y_axis)
+    image = Violin.make(dataframe, x_axis, y_axis, size)
     Output.png(output, image)
 
 if __name__ == '__main__':

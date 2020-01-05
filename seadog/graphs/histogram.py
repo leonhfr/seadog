@@ -12,7 +12,10 @@ class Histogram:
 
         return None
 
-    def make(dataframe, column, bucket, log, discrete):
+    def make(dataframe, column, bucket, log, discrete, size):
+        figsize = Helper.get_figsize(size)
+        plt.figure(figsize = figsize)
+
         x_label = column
         y_label = 'count'
         series = dataframe[column]

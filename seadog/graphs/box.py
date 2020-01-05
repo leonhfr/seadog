@@ -17,7 +17,10 @@ class Box:
 
         return None
 
-    def make(dataframe, x_axis, y_axis):
+    def make(dataframe, x_axis, y_axis, size):
+        figsize = Helper.get_figsize(size)
+        plt.figure(figsize = figsize)
+        
         base_color = sb.color_palette()[0]
         sb.boxplot(data = dataframe, x = x_axis, y = y_axis,
             color = base_color)

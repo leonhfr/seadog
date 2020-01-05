@@ -18,7 +18,10 @@ class Scatterplot:
 
         return None
 
-    def make(dataframe, x_axis, y_axis, xlog, ylog, regline):
+    def make(dataframe, x_axis, y_axis, xlog, ylog, regline, size):
+        figsize = Helper.get_figsize(size)
+        plt.figure(figsize = figsize)
+
         x_label = x_axis
         y_label = y_axis
         x_data = dataframe[x_axis].apply(Helper.log_trans, apply = xlog)

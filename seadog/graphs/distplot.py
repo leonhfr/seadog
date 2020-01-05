@@ -13,7 +13,10 @@ class Distplot:
 
         return None
 
-    def make(dataframe, column, bucket):
+    def make(dataframe, column, bucket, size):
+        figsize = Helper.get_figsize(size)
+        plt.figure(figsize = figsize)
+
         series = dataframe[column]
         
         if bucket == None:

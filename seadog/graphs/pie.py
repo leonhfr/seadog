@@ -11,7 +11,10 @@ class Pie:
 
         return None
 
-    def make(dataframe, column):
+    def make(dataframe, column, size):
+        figsize = Helper.get_figsize(size)
+        plt.figure(figsize = figsize)
+        
         sorted_counts = dataframe[column].value_counts()
 
         plt.pie(sorted_counts, labels = sorted_counts.index,
